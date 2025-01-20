@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Stack;
 
 class Java2580{
     public static void main(String[] args) throws IOException {
@@ -14,7 +13,7 @@ class Java2580{
             String[] temp = input.readLine().split(" ");
             for (int ii = 0; ii < 9; ii++) sudocu[i][ii] = Integer.parseInt(temp[ii]);
         }
-
+        input.close();
         recur(sudocu);
     }
 
