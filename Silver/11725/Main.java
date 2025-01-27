@@ -1,9 +1,11 @@
+package Silver11725;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
-public class Java11725 {
+public class Main {
     static HashSet<Integer>[] hs;
     static int[] parents;
 
