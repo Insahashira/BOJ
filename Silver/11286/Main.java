@@ -1,9 +1,11 @@
+package Silver11286;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.PriorityQueue;
 
-public class Java11286 {
+public class Main {
 
     private static class Entry implements Comparable<Entry> {
         private int raw;
