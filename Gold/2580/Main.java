@@ -1,10 +1,12 @@
+package Gold2580;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Iterator;
 
-class Java2580{
+class Main{
     public static void main(String[] args) throws IOException {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         int[][] sudocu  = new int[9][9];
