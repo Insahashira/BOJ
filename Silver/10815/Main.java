@@ -9,13 +9,10 @@ import java.util.HashSet;
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int count = Integer.parseInt(br.readLine());
 
         String[] num = br.readLine().split(" ");
 
         HashSet<String> ts = new HashSet<>(Arrays.asList(num));
-
-        count = Integer.parseInt(br.readLine());
 
         StringBuilder sb = new StringBuilder();
         num = br.readLine().split(" ");
