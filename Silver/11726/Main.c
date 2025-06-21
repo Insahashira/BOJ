@@ -4,7 +4,7 @@ int count[10001] = {0};
 
 int recur(int num) {
     if (num > 1){
-        if (count[num] == 0) return count[num] = recur(num - 1) % 10007 + recur(num - 2) % 10007;
+        if (count[num] == 0) return count[num] = recur(num - 1) % 10007 + (recur(num - 2)*2) % 10007;
         return count[num];
     }
     return count[num] = 1;
