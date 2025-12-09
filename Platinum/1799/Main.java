@@ -4,61 +4,56 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int count;
-    static HashSet<int[]> available;
-    static boolean[][] table, newTable, visited;
+    static short count;
+    static boolean[][] table;
+    static short[][] visited;
     static int max = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        available = new HashSet<>();
 
-        count = Integer.parseInt(br.readLine());
+        count = Short.parseShort(br.readLine());
 
         table = new boolean[count][count];
-        visited = new boolean[count][count];
+        visited = new short[count][count];
 
-        for(int i = 0; i < count; i++) {
+        for(short i = 0; i < count; i++) {
             StringTokenizer s = new StringTokenizer(br.readLine());
             for(int ii = 0; ii < count; ii++) table[i][ii] = s.nextToken().charAt(0) == '1';
         }
 
-        for(int i = 0; i < count; i++) for(int ii = 0; ii < count; ii++) if(table[i][ii] && !visited[i][ii]) search(i, ii);
+        bfs((short) 0, (short) 0);
 
         System.out.println(max);
     }
 
-    public static void search(int row, int col) {
-        newTable = new boolean[count][count];
-        int localCount = 0;
+    public static void bfs(short row, short col){
+        if(check_answer()) process_answer();
 
-        for(int i = 0 ; i < count ; i++) for(int ii = 0 ; ii < count ; ii++){
-            if(table[i][ii] && !newTable[i][ii]){
-                gridMarker(i, ii);
-                visited[i][ii] = true;
-                localCount++;
-            }
-        }
-        visited[row][col] = true;
+        make_move(row, col);
 
-        max = Math.max(localCount, max);
+        if(col + 1 < count) bfs(row, (short) (col + 1));
+        else if(row + 1 < count) bfs((short) (row + 1), (short) 0);
+        
+        undo_move(row, col);
+
+        if(col + 1 < count) bfs(row, (short) (col + 1));
+        else if(row + 1 < count) bfs((short) (row + 1), (short) 0);
     }
 
-    public static void gridMarker(int row, int col){
-        int tempRow = row;
-        int tempCol = col;
-//        while(tempRow >= 0 && tempCol >= 0) newTable[tempRow--][tempCol--] = true;
+    public static void make_move(short row, short col){
+        visited[row][col]++;
+    }
 
-//        tempRow = row;
-//        tempCol = col;
-        while(tempRow < count && tempCol < count) newTable[tempRow++][tempCol++] = true;
+    public static void undo_move(short row, short col){
 
-        tempRow = row;
-        tempCol = col;
-        while(tempRow < count && tempCol >= 0) newTable[tempRow++][tempCol--] = true;
+    }
 
-//        tempRow = row;
-//        tempCol = col;
-//        while(tempRow >= 0 && tempCol < count) newTable[tempRow--][tempCol++] = true;
+    public static boolean check_answer(){
+        return true;
+    }
+
+    public static void process_answer(){
+
     }
 }
