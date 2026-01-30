@@ -5,7 +5,6 @@ public class Main {
     static int[] visit_order;
     static int visit_counter = 1;
     static int vertice, edge;
-    static Stack<Object> stack = new Stack();
     static ArrayList<Integer>[] e;
     static ArrayList<Integer>cut_node = new ArrayList<>();
 
@@ -32,40 +31,34 @@ public class Main {
             e[from].add(to);
             e[to].add(from);
         }
-
         DFS(0);
         node_dump();
     }
 
-    public static void DFS(int index){
-        stack.push(index);
-        int prev_level = 0x7fffffff;
+    public static void add_cutting_node(int index){
+        if(!cut_node.contains(index)) cut_node.add(index);
+    }
 
-        while(!stack.isEmpty()){
-            int idx = (int) stack.pop();
-
-            if(visit_order[idx] != 0){
-                if(prev_level < idx){
-                    //올라갈 수 있는 상황
-                }else{
-                    //못올라감
-                }
-            } else {
-                visit_order[idx] = visit_counter++;
-                cut_node.add(idx);
-            }
-
-            ArrayList ar = e[idx];
-            for(int i = 0; i < ar.size(); i++){
-                int next = (int) ar.get(i);
-                if(next != idx) stack.push(ar.get(i));
+    public static int DFS(int idx){
+        if(visit_order[idx] != 0){
+            return idx;
+        }else{
+            visit_order[idx] = visit_counter++;
+            for(int i = 0; i < e[idx].size(); i++){
+                int candidate = e[idx].get(i);
+                int result = DFS(candidate);
             }
         }
+        
+        return 0;
+
     }
 
     public static void node_dump(){
+        System.out.println(cut_node.size());
+        Collections.sort(cut_node);
         for(int i = 0; i < cut_node.size(); i++){
-            System.out.println(cut_node.get(i));
+            System.out.print(cut_node.get(i)+ 1 + " ");
         }
     }
 }
