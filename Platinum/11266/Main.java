@@ -2,9 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int[] visit_order;
-    static int visit_counter = 1;
-    static int vertice, edge;
+    static int[] visit_order, parent;
+    static int visit_counter = 1, vertice, edge;
     static ArrayList<Integer>[] e;
     static ArrayList<Integer>cut_node = new ArrayList<>();
 
@@ -16,6 +15,7 @@ public class Main {
         edge = Integer.parseInt(st.nextToken());
 
         visit_order = new int[vertice];
+        parent = new int[vertice];
 
         e = (ArrayList<Integer>[]) new ArrayList[vertice];
         for(int i = 0; i < vertice; i++){
@@ -31,33 +31,58 @@ public class Main {
             e[from].add(to);
             e[to].add(from);
         }
-        for(int i = 0; i < vertice; i++) if(visit_order[i] == 0) DFS(i, i);
+        for(int i = 0; i < vertice; i++) if(visit_order[i] == 0) DFS(i, i, i);
         node_dump();
+        // visit_dump();
+        // parent_dump();
     }
 
     public static void add_cutting_node(int index){
         if(!cut_node.contains(index)) cut_node.add(index);
     }
 
-    public static int DFS(int par, int idx){
+    public static void DFS(int par, int idx, int root){
+        if(visit_order[idx] > 0) return;
+        if(e[idx].isEmpty()) return;
+
+        visit_order[idx] = visit_counter++;
         int cur_order = visit_order[idx];
-        if(cur_order == 0){
-            visit_order[idx] = visit_counter++;
-            cur_order = visit_order[idx];
+        int lowest = cur_order;
+        int child_cnt = 0;
 
-            if(e[idx].isEmpty() ||(e[idx].size() == 1 && par != idx)) return cur_order;
+        for(int i = 0; i < e[idx].size(); i++){
+            int candidate = e[idx].get(i);
+            if(candidate == par) continue;
 
-            int lowest = 0x7fffffff; 
-            for(int i = 0; i < e[idx].size(); i++){
-                int candidate = e[idx].get(i);
-                if(i != par){
-                    int result = DFS(idx, candidate);
-                    lowest = Math.min(lowest, result);
-                }
+            if(visit_order[candidate] > 0) lowest = Math.min(lowest, visit_order[candidate]);
+            else{
+                child_cnt++;
+                DFS(idx, candidate, root);
+                int result = parent[candidate];
+                
+                if(idx != root && result >= cur_order) add_cutting_node(idx);
+                lowest = Math.min(lowest, result);
             }
-            if(lowest >= cur_order) add_cutting_node(idx);
-            return lowest;
-        }else return cur_order;
+        }
+
+        if(idx == root && child_cnt > 1){
+            add_cutting_node(idx);
+        }
+        parent[idx] = lowest;
+    }
+
+    public static void visit_dump(){
+        for(int i = 0 ; i < vertice; i++){
+            System.out.print(visit_order[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public static void parent_dump(){
+        for(int i = 0 ; i < vertice; i++){
+            System.out.print(parent[i] + " ");
+        }
+        System.out.println();
     }
 
     public static void node_dump(){
@@ -66,5 +91,7 @@ public class Main {
         for(int i = 0; i < cut_node.size(); i++){
             System.out.print(cut_node.get(i) + 1 + " ");
         }
+        System.out.println();
     }
 }
+//whtrkxek Tlqkf!!!!!!!!
