@@ -1,93 +1,90 @@
-package Gold9019;
-
 import java.io.*;
 import java.util.*;
 
 public class Main {
-   private static class SN{ //StringNode
-       char ch;
-       SN next;
+    static char[] operations;
+    static int[] parent;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        Queue<Integer> q;
+        int count = Integer.parseInt(st.nextToken());
+        
+        for (int i = 0; i < count; i++) {
+            boolean[] visited = new boolean[10000];
+            operations = new char[10000];
+            parent = new int[100000];
+            q = new LinkedList<>();
 
-       public SN(char ch, SN next){
-           this.ch = ch;
-           this.next = next;
-       }
-   }
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
 
-   private static class Node{
-       int val;
-       SN op;
-       Boolean isL;
 
-       public Node(int val, SN op, Boolean isL){
-           this.val = val;
-           this.op = op;
-           this.isL = isL;
-       }
-   }
+            q.add(from);
+            operations[from] = 0;
+            parent[from] = -1;
 
-   public static void main(String[] args) throws IOException {
-       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-       StringTokenizer st = new StringTokenizer(br.readLine());
-       Queue<Node> q;
-       int count = Integer.parseInt(st.nextToken());
+            while(!q.isEmpty()) {
+                int n = q.poll();
+                visited[n] = true;
 
-       for (int i = 0; i < count; i++) {
-           boolean[] visited = new boolean[10000];
-           q = new LinkedList<>();
+                if(n == to){
+                    print_process(to);
+                    break;
+                }
 
-           st = new StringTokenizer(br.readLine());
-           int from = Integer.parseInt(st.nextToken());
-           int to = Integer.parseInt(st.nextToken());
+                //D
+                int n_D = (n*2)%10000;
+                if(!visited[n_D]){
+                    q.add(n_D);
+                    operations[n_D] = 'D';
+                    parent[n_D] = n;
+                } 
 
-           q.add(new Node(to, new SN((char)0, null), null));
+                //S
+                int n_S = n <= 0 ? 9999 : n-1;
+                if(!visited[n_S]){
+                    operations[n_S] = 'S';
+                    parent[n_S] = n;
+                    q.add(n_S);
+                } 
+                    
 
-           while(!q.isEmpty()) {
-               Node n = q.poll();
-               int temp = n.val;
-               visited[temp] = true;
+                //L
+                int n_L = (n*10)%10000 + n/1000;
+                if(!visited[n_L]){
+                    operations[n_L] = 'L';
+                    parent[n_L] = n;
+                    q.add(n_L);
+                } 
 
-               SN source = n.op;
-               Boolean isL = n.isL;
+                //R
+                int n_R = (n/10) + (n%10) * 1000;
+                if(!visited[n_R]){
+                    operations[n_R] = 'R';
+                    parent[n_R] = n;
+                    q.add(n_R);
+                } 
+            }
+        }
+    }
 
-               if(temp == from){
-                   StringBuilder sb = new StringBuilder();
+    static void print_process(int num){
+        StringBuilder sb = new StringBuilder();
+        Stack<Object> st = new Stack<>();
+        while(true){
+            st.add(operations[num]);
+            // st.add(parent[num]);
+            if(parent[num] == -1) break;
+            num = parent[num];
+        }
+        st.pop();
 
-                   while(source.ch != 0){
-                       sb.append(source.ch);
-                       source = source.next;
-                   }
+        while(!st.isEmpty()){
+            sb.append(st.pop());
+        }
 
-                   sb.append("\n");
-                   System.out.print(sb);
-                   break;
-               }
-
-               if(temp % 2 == 0){
-                   if(!visited[temp/2])                         q.add(new Node(temp/2, new SN('D', source), isL));
-                   if(temp < 5000 && !visited[(temp + 5000)/2]) q.add(new Node((temp + 5000)/2, new SN('D', source), isL));
-               }
-
-               if(temp == 9999 && !visited[0]) q.add(new Node(0, new SN('S', source), isL));
-               else if(!visited[temp + 1])     q.add(new Node(temp + 1, new SN('S', source), isL));
-
-               int temp2;
-               if(isL == null || isL) {
-                   temp2 = temp % 10;
-                   temp2 = (temp2 * 1000) + (temp / 10);
-
-//                    if(!visited[temp2])
-                   q.add(new Node(temp2, new SN('L', source), true));
-               }
-
-               if(isL == null || !isL) {
-                   temp2 = temp / 1000;
-                   temp2 = temp2 + (temp * 10) % 10000;
-
-//                    if(!visited[temp2])
-                   q.add(new Node(temp2, new SN('R', source), false));
-               }
-           }
-       }
-   }
+        System.out.println(sb);
+    }
 }
